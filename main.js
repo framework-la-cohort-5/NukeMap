@@ -1,3 +1,4 @@
+
 // Google Maps API Key = AIzaSyBSR2_qTPso9gFSXcLf8SaW75KlVRN5BKg 
 
 var nuclearReactorsCA = [{
@@ -119,5 +120,3 @@ function getCircle(magnitude) {
 function eqfeed_callback(results) {
     map.data.addGeoJson(results);
 };
-
-      
