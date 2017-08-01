@@ -1,4 +1,12 @@
+#map {
+        height: 100%;
+      }
 
+html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
 
 #map_wrapper {
     height: 400px;
@@ -9,15 +17,6 @@
     height: 100%;
 }
 
-#map {
-        height: 100%;
-      }
-      /* Optional: Makes the sample page fill the window. */
-      html, body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
 #floating-panel {
         position: absolute;
         top: 10px;
