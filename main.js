@@ -71,7 +71,7 @@ function clearMarkers() {
     markers = [];
 }
 
-var script = document.createElement('script');
+// var script = document.createElement('script');
 
 //     // This example uses a local copy of the GeoJSON stored at
 //     // http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojsonp
@@ -87,28 +87,32 @@ var settings = {
   }
 }
 
-// var $earthquakes = 
+
 
 $.ajax(settings).done(function (response) {
-  console.log(response);
+    console.log(response);
+    var magnitude = response.getProperty('mag');
+    return {
+         icon: getCircle(magnitude)
+        };
 });
 
-console.log("$earthquakes");
+// console.log("$earthquakes");
 
-document.getElementsByTagName('head')[0].appendChild(script);
+// document.getElementsByTagName('head')[0].appendChild(script);
 
-map.data.setStyle(function (feature) {
-        var magnitude = feature.getProperty('mag');
-        return {
-            icon: getCircle(magnitude)
-        };
-    });
+// map.data.setStyle(function (feature) {
+//         var magnitude = feature.getProperty('mag');
+//         return {
+//             icon: getCircle(magnitude)
+//         };
+//     });
 
 
 function getCircle(magnitude) {
     return {
         path: google.maps.SymbolPath.CIRCLE,
-        fillColor: 'red',
+        fillColor: 'blue',
         fillOpacity: .2,
         scale: Math.pow(2, magnitude) / 2,
         strokeColor: 'white',
@@ -116,8 +120,12 @@ function getCircle(magnitude) {
     };
 }
 
-function eqfeed_callback(results) {
-    map.data.addGeoJson(results);
+console.log(getCircle(8));
+
+function dropE() {
+    for (var i = 0; i < $earthquakes.length; i++) {
+        addMarkerWithTimeout($earthquakes[i], i * 200);
+    }
 };
 
       
