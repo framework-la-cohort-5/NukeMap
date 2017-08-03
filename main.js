@@ -1,4 +1,20 @@
 var nuclearReactorsCA = [{
+        name: 'Nevada Test Site',
+        lat: 37.116667,
+        lng: -116.050000,
+        status: 'inactive'
+
+     }, {
+        name: 'Palo Verde Nuclear Generating Station',
+        lat: 33.389167,
+        lng: -112.865000,
+        status: 'active'
+    }, {
+        name: 'Yucca montains',
+        lat: 36.940211,
+        lng: -116.485007,
+        status: 'main USA disposal project'
+    }, {
         name: 'Diablo Canyon Power Plant',
         lat: 35.210833,
         lng: -120.856111,
@@ -33,36 +49,54 @@ var nuclearReactorsCA = [{
         status: 'decomissioned',
         dateClosed: '15 February 1964'
     }];
+    
 
 
-      var markers = [];
       var map;
+      var markers = [];
 
       function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 6,
-          center: {lat: 36.7783, lng: -119.4179}
-        });
-      }
+        zoom: 6,
+        center: {lat: 36.7783, lng: -119.4179},
+        mapTypeId: 'terrain'
+    });
+}
+      
+     
+
 
       function drop() {
         clearMarkers();
         for (var i = 0; i < nuclearReactorsCA.length; i++) {
-          addMarkerWithTimeout(nuclearReactorsCA[i], i * 200);
+          addMarkerWithTimeout(nuclearReactorsCA[i], i * 200)
+          }
         }
-      }
+      
 
 
       function addMarkerWithTimeout(position, timeout) {
         window.setTimeout(function() {
-          markers.push(new google.maps.Marker({
+
+            var infowindow = new google.maps.InfoWindow({
+          content: name
+        });
+
+            var marker = new google.maps.Marker({
             position: position,
             map: map,
-            animation: google.maps.Animation.DROP
-          }));
+            animation: google.maps.Animation.DROP,
+          });
+
+       
+          
+        marker.addListener('click', function() {
+              infowindow.open(map, marker);
+         });
+
+        markers.push(marker)
         }, timeout);
-      }
-    
+    } 
 
       function clearMarkers() {
         for (var i = 0; i < markers.length; i++) {
@@ -71,6 +105,14 @@ var nuclearReactorsCA = [{
         markers = [];
       }
 
+      var map;
 
+function initMap() {
+    map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 6,
+    center: {lat: 36.7783, lng: -119.4179},
+    mapTypeId: 'terrain'
+  });
+}
 
-   
+  
