@@ -1,3 +1,4 @@
+
 // Google Maps API Key = AIzaSyBSR2_qTPso9gFSXcLf8SaW75KlVRN5BKg 
 
 var nuclearReactorsCA = [{
@@ -148,6 +149,7 @@ function dropE() {
         addEarthquakeWithTimeout(LatLng, mag, i * 200);
     }
 };
+<<<<<<< HEAD
 
 
 
@@ -180,3 +182,5 @@ function addEarthquakeWithTimeout(position, mag, timeout) {
 //     }
 //     $earthquakes = [];
 // }
+=======
+>>>>>>> a1ceda1b064f517c5f4c2636a4fa7aeff24f2b82
