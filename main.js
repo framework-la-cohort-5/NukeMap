@@ -67,8 +67,6 @@ var nuclearReactorsCA = [{
     });
 }
       
-     
-
 
       function drop() {
         clearMarkers();
@@ -89,10 +87,12 @@ var nuclearReactorsCA = [{
             var marker = new google.maps.Marker({
             position: position,
             map: map,
-            animation: google.maps.Animation.DROP,
-          });
+            animation: google.maps.Animation.DROP
+        }));
+    }, timeout);
 
-       
+
+}
           
         marker.addListener('click', function() {
               infowindow.open(map, marker);
@@ -110,3 +110,84 @@ function clearMarkers() {
 }
 
 
+var settings = {
+    "async": true,
+    "crossDomain": true,
+    "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&latitude=36&longitude=-119&maxradius=5&minmagnitude=5&starttime=1900-01-01",
+    "method": "GET",
+    "headers": {
+        "content-type": "application/json"
+    }
+}
+
+var $earthquakes = [];
+
+$.ajax(settings).done(function (response) {
+    // console.log(response);
+    for (var i = 0; i < response.features.length; i++) {
+        $earthquakes.push({
+            lat: response.features[i].geometry.coordinates[1],
+            lng: response.features[i].geometry.coordinates[0],
+            mag: response.features[i].properties.mag,
+            time: response.features[i].properties.time,
+            url: response.features[i].properties.url
+        })
+    }
+    // console.log($earthquakes);
+});
+
+
+// function getCircle(magnitude) {
+//     return {
+//         path: google.maps.SymbolPath.CIRCLE,
+//         fillColor: 'green',
+//         fillOpacity: .2,
+//         scale: Math.pow(2, magnitude) / 2,
+//         strokeColor: 'white',
+//         strokeWeight: .5
+//     };
+// }
+
+
+// var center = []
+//    console.log(center);
+
+function dropE() {
+    // clearEarthquakes();
+    for (var i = 0; i < $earthquakes.length; i++) {
+        var feature = $earthquakes[i];
+        var LatLng = { lat: $earthquakes[i].lat, lng: $earthquakes[i].lng };
+        var mag = $earthquakes[i].mag;
+
+        addEarthquakeWithTimeout(LatLng, mag, i * 200);
+    }
+};
+var markersE = [];
+
+function addEarthquakeWithTimeout(position, mag, timeout) {
+
+    window.setTimeout(function () {
+        //  console.log(mag);
+        markersE.push(new google.maps.Circle({
+            center: position,
+            fillColor: 'green',
+            fillOpacity: .2,
+            radius: Math.pow(2, mag) * 1000,
+            strokeColor: 'white',
+            strokeWeight: .5,
+            map: map,
+            animation: google.maps.Animation.DROP
+        }, timeout))
+
+    })
+}
+
+
+// console.log(markersE);
+
+// function clearEarthquakes() {
+//     for (var i = 0; i < $earthquakes.length; i++) {
+//         $earthquakes[i].setMap(null);
+//     }
+//     $earthquakes = [];
+// }
