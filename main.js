@@ -51,6 +51,10 @@ function drop() {
     clearMarkers();
     for (var i = 0; i < nuclearReactorsCA.length; i++) {
         addMarkerWithTimeout(nuclearReactorsCA[i], i * 200);
+        // google.maps.event.addListener(markers, 'click', function() {
+        //   infowindow.setContent(nuclearReactorsCA.name);
+        //   infowindow.open(map, markers);
+        // });
     }
 }
 
@@ -62,6 +66,8 @@ function addMarkerWithTimeout(position, timeout) {
             animation: google.maps.Animation.DROP
         }));
     }, timeout);
+
+
 }
 
 function clearMarkers() {
@@ -77,55 +83,100 @@ function clearMarkers() {
 //     // http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojsonp
 // script.src = 'https://developers.google.com/maps/documentation/javascript/examples/json/earthquake_GeoJSONP.js';
 
+// get data fromt the API and save as a variable to use when I click on earthquakes button
+// make circles according to the magnitude of the earthquake
+// click on earthquakes button to make cirles with dropE function
+// clear earthquakes when I run dropE again
+// pop up when you click on the earthquake with the magnitude and date 
+
+
+
+// var test = { "type": "Feature", "properties": { "mag": 5.6, "place": "26km SW of Hawthorne, Nevada", "time": 1482913332208, "updated": 1490309526040, "tz": -480, "url": "https://earthquake.usgs.gov/earthquakes/eventpage/nn00570710", "detail": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=nn00570710&format=geojson", "felt": 11559, "cdi": 5.7, "mmi": 6.81, "alert": "green", "status": "reviewed", "tsunami": 0, "sig": 1052, "net": "nn", "code": "00570710", "ids": ",nn00570710,nc72744490,us10007n66,", "sources": ",nn,nc,us,", "types": ",dyfi,focal-mechanism,general-link,geoserve,impact-text,losspager,moment-tensor,nearby-cities,origin,phase-data,scitech-link,shakemap,", "nst": 43, "dmin": 0.123, "rms": 0.1913, "gap": 42.44, "magType": "ml", "type": "earthquake", "title": "M 5.6 - 26km SW of Hawthorne, Nevada" }, "geometry": { "type": "Point", "coordinates": [-118.8972, 38.3904, 12.2] }, "id": "nn00570710" }
+// console.log(test.geometry.coordinates);
+// // // // console.log(JSON.parse(test));
+
+
 var settings = {
-  "async": true,
-  "crossDomain": true,
-  "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&latitude=36&longitude=-119&maxradius=5&minmagnitude=5&starttime=1900-01-01",
-  "method": "GET",
-  "headers": {
-  "content-type": "application/json"
-  }
+    "async": true,
+    "crossDomain": true,
+    "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&latitude=36&longitude=-119&maxradius=5&minmagnitude=5&starttime=1900-01-01",
+    "method": "GET",
+    "headers": {
+        "content-type": "application/json"
+    }
 }
 
-
+var $earthquakes = [];
 
 $.ajax(settings).done(function (response) {
-    console.log(response);
-    var magnitude = response.getProperty('mag');
-    return {
-         icon: getCircle(magnitude)
-        };
+    // console.log(response);
+    for (var i = 0; i < response.features.length; i++) {
+        $earthquakes.push({
+            lat: response.features[i].geometry.coordinates[1],
+            lng: response.features[i].geometry.coordinates[0],
+            mag: response.features[i].properties.mag,
+            time: response.features[i].properties.time,
+            url: response.features[i].properties.url
+        })
+    }
+    // console.log($earthquakes);
 });
 
-// console.log("$earthquakes");
 
-// document.getElementsByTagName('head')[0].appendChild(script);
+// function getCircle(magnitude) {
+//     return {
+//         path: google.maps.SymbolPath.CIRCLE,
+//         fillColor: 'green',
+//         fillOpacity: .2,
+//         scale: Math.pow(2, magnitude) / 2,
+//         strokeColor: 'white',
+//         strokeWeight: .5
+//     };
+// }
 
-// map.data.setStyle(function (feature) {
-//         var magnitude = feature.getProperty('mag');
-//         return {
-//             icon: getCircle(magnitude)
-//         };
-//     });
 
-
-function getCircle(magnitude) {
-    return {
-        path: google.maps.SymbolPath.CIRCLE,
-        fillColor: 'blue',
-        fillOpacity: .2,
-        scale: Math.pow(2, magnitude) / 2,
-        strokeColor: 'white',
-        strokeWeight: .5
-    };
-}
-
-console.log(getCircle(8));
+// var center = []
+//    console.log(center);
 
 function dropE() {
+    // clearEarthquakes();
     for (var i = 0; i < $earthquakes.length; i++) {
-        addMarkerWithTimeout($earthquakes[i], i * 200);
+        var feature = $earthquakes[i];
+        var LatLng = { lat: $earthquakes[i].lat, lng: $earthquakes[i].lng };
+        var mag = $earthquakes[i].mag;
+
+        addEarthquakeWithTimeout(LatLng, mag, i * 200);
     }
 };
 
-      
+
+
+var markersE = [];
+
+function addEarthquakeWithTimeout(position, mag, timeout) {
+
+    window.setTimeout(function () {
+        //  console.log(mag);
+        markersE.push(new google.maps.Circle({
+            center: position,
+            fillColor: 'green',
+            fillOpacity: .2,
+            radius: Math.pow(2, mag) * 1000,
+            strokeColor: 'white',
+            strokeWeight: .5,
+            map: map,
+            animation: google.maps.Animation.DROP
+        }, timeout))
+
+    })
+}
+
+
+// console.log(markersE);
+
+// function clearEarthquakes() {
+//     for (var i = 0; i < $earthquakes.length; i++) {
+//         $earthquakes[i].setMap(null);
+//     }
+//     $earthquakes = [];
+// }
