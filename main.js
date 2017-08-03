@@ -1,4 +1,8 @@
+
+// Google Maps API Key = AIzaSyBSR2_qTPso9gFSXcLf8SaW75KlVRN5BKg 
+
 var nuclearReactorsCA = [{
+
         name: 'Nevada Test Site',
         lat: 37.116667,
         lng: -116.050000,
@@ -98,21 +102,11 @@ var nuclearReactorsCA = [{
         }, timeout);
     } 
 
-      function clearMarkers() {
-        for (var i = 0; i < markers.length; i++) {
-          markers[i].setMap(null);
-        }
-        markers = [];
-      }
-
-      var map;
-
-function initMap() {
-    map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 6,
-    center: {lat: 36.7783, lng: -119.4179},
-    mapTypeId: 'terrain'
-  });
+function clearMarkers() {
+    for (var i = 0; i < markers.length; i++) {
+        markers[i].setMap(null);
+    }
+    markers = [];
 }
 
-  
+
